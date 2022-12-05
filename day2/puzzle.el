@@ -10,6 +10,16 @@
     (insert-file-contents name)
     (buffer-string)))
 
+(defun scorer (opponent mine)
+  "Returns 0 if OPPONENT won, 3 if draw, and 6 if OPPONENT lost."
+  (let* ((o (- (aref opponent 0) 65))
+         (m (- (aref mine 0) 88))
+         (diff (- o m)))
+    (cond
+     ((= diff 0) 3)
+     ((or (= diff 1) (= diff -2)) 0)
+     (6))))
+
 (defun shapescore (choice)
   "Return score for CHOICE."
   (let ((score '(("X" . 1) ("Y" . 2) ("Z" . 3))))
@@ -17,16 +27,11 @@
 
 (defun score (round)
   "Computes score given opponent and my move in ROUND."
-  (let* ((outcomescore '(("AX" . 3) ("BY" . 3) ("CZ" . 3)
-                         ("AY" . 6) ("AZ" . 0)
-                         ("BZ" . 6) ("BX" . 0)
-                         ("CX" . 6) ("CY" . 0)))
-         
-         (parts (split-string round))
+  (let* ((parts (split-string round))
          (opponent (nth 0 parts))
          (mine (nth 1 parts))
          (outcome (concat opponent mine)))
-         (+ (assoc-default outcome outcomescore)
+         (+ (scorer opponent mine)
             (shapescore mine))))
 
 (defun make-choice (round)
