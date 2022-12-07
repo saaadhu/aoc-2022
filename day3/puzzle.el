@@ -11,22 +11,22 @@
     (buffer-string)))
 
 (defun elt-priority (ord)
-  "Computes priority for one element."
+  "Computes priority for one element with ordinal value ORD."
     (cond
      ((> ord 96) (- ord 96))
      ((+ (- ord 64) 26))))
 
 (defun get-priority (line)
-  "Computes priority for one line."
+  "Compute priority for one LINE."
   (let* ((len (length line))
          (half-len (/ len 2))
          (comp-1 (append (substring line 0 half-len) '()))
          (comp-2 (append (substring line half-len len) '()))
-         (elt (cl-intersection comp-1 comp-2)))
+         (elt (seq-intersection comp-1 comp-2)))
     (elt-priority (car elt))))
 
 (defun find-badge (parts)
-  "Finds bage in PARTS."
+  "Find badge in PARTS."
   (let ((el0 (append (nth 0 parts) '()))
        (el1 (append (nth 1 parts) '()))
        (el2 (append (nth 2 parts) '())))
@@ -42,7 +42,7 @@
          (apply '+ (mapcar 'get-priority lines))))
 
 (defun solve-puzzle-2 ()
-  "Solve Day3 Puzzle1."
+  "Solve Day3 Puzzle2."
   (let* ((contents (readfile "input"))
          (lines (split-string contents "\n"))
          (parts (seq-partition lines 3))
